@@ -9,19 +9,29 @@
 namespace Application\Service;
 
 
-use Zend\Db\Adapter\Adapter;
 use Zend\Db\TableGateway\TableGateway;
 
 class WorldService
 {
     /**
-     * @var Adapter
+     * @var TableGateway
      */
-    private $adapter;
+    private $countryTable;
+    /**
+     * @var TableGateway
+     */
+    private $cityTable;
 
-    public function __construct(Adapter $adapter)
-    {
-        $this->adapter = $adapter;
+    /**
+     * @param \Zend\Db\TableGateway\TableGateway $countryTable
+     * @param \Zend\Db\TableGateway\TableGateway $cityTable
+     */
+    public function __construct(
+      TableGateway $countryTable,
+      TableGateway $cityTable
+    ) {
+        $this->countryTable = $countryTable;
+        $this->cityTable = $cityTable;
     }
 
     /**
@@ -29,9 +39,7 @@ class WorldService
      */
     public function getAllCountries()
     {
-        $tableGateway = new TableGateway('Country', $this->adapter);
-        $countries = $tableGateway->select()->toArray();
-
+        $countries = $this->countryTable->select()->toArray();
         return $countries;
     }
 
@@ -41,9 +49,7 @@ class WorldService
      */
     public function getCountryByCode($code)
     {
-        $tableGateway = new TableGateway('Country', $this->adapter);
-        $country = $tableGateway->select(['Code' => $code])->toArray();
-
+        $country = $this->countryTable->select(['Code' => $code])->toArray();
         return $country;
     }
 
@@ -53,9 +59,8 @@ class WorldService
      */
     public function getCitiesByCountryCode($countryCode)
     {
-        $cityTableGateway = new TableGateway('City', $this->adapter);
-        $cities = $cityTableGateway->select(['CountryCode' => $countryCode])->toArray();
-
+        $cities = $this->cityTable->select(['CountryCode' => $countryCode])
+          ->toArray();
         return $cities;
     }
 
@@ -65,9 +70,7 @@ class WorldService
      */
     public function getCityById($id)
     {
-        $cityTableGateway = new TableGateway('City', $this->adapter);
-        $city = $cityTableGateway->select(['ID' => $id])->toArray();
-
+        $city = $this->cityTable->select(['ID' => $id])->toArray();
         return $city;
     }
 

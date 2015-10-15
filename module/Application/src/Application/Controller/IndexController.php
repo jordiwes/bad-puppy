@@ -41,7 +41,6 @@ class IndexController extends AbstractActionController
 
     public function countryAction()
     {
-
         $code = $this->params()->fromRoute('code');
         $country = $this->worldService->getCountryByCode($code);
         if (count($country) < 1) {
@@ -60,7 +59,6 @@ class IndexController extends AbstractActionController
 
     public function cityAction()
     {
-
         $id = $this->params()->fromRoute('id');
         $city = $this->worldService->getCityById($id);
         if (count($city) < 0) {

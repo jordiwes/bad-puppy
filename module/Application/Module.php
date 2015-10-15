@@ -9,9 +9,9 @@
 
 namespace Application;
 
+use Application\AbstractFactory\TableGatewayAbstractFactory;
 use Application\Controller\IndexController;
 use Application\Service\WorldService;
-use Zend\Db\Adapter\Adapter;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -51,9 +51,14 @@ class Module
         return [
           'factories' => [
             WorldService::class => function (ServiceManager $serviceManager) {
-                $adapter = $serviceManager->get(Adapter::class);
-                return new WorldService($adapter);
+                $countryTable = $serviceManager->get('CountryTable');
+                $cityTable = $serviceManager->get('CityTable');
+
+                return new WorldService($countryTable, $cityTable);
             }
+          ],
+          'abstract_factories' => [
+                TableGatewayAbstractFactory::class,
           ],
         ];
     }
