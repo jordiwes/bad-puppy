@@ -14,13 +14,3 @@ return [
     ],
 
 ];
-
-//return [
-//    '
-//    'db' => [
-//        'driver'    => 'pdo',
-//        'dsn'       => 'mysql:dbname=CHANGEME;host=localhost',
-//        'username'  => 'CHANGEME',
-//        'password'  => 'CHANGEME',
-//    ],
-//];
