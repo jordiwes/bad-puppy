@@ -31,11 +31,12 @@ class Module
         return include __DIR__ . '/config/module.config.php';
     }
 
+    // Module.php
     public function getControllerConfig()
     {
         return [
           'factories' => [
-            '\Application\Controller\Index' => function (
+            IndexController::class => function (
               ControllerManager $controllerManager
             ) {
                 $worldService = $controllerManager->getServiceLocator()
