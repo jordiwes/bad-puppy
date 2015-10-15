@@ -9,26 +9,39 @@
 
 namespace Application\Controller;
 
+use Zend\Db\Adapter\Adapter;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 
-// module/Application/src/Application/Controller/IndexController.php
 class IndexController extends AbstractActionController
 {
+
+    /**
+     * @var Adapter
+     */
+    private $adapter;
+
+    /**
+     * IndexController constructor.
+     * @param Adapter $adapter
+     */
+    public function __construct(Adapter $adapter)
+    {
+        $this->adapter = $adapter;
+    }
+
     public function indexAction()
     {
-        $adapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
-        $tableGateway = new TableGateway('Country', $adapter);
+        $tableGateway = new TableGateway('Country', $this->adapter);
         $countries = $tableGateway->select()->toArray();
         return new ViewModel(['countries' => $countries]);
     }
 
     public function countryAction()
     {
-        $adapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
-        $tableGateway = new TableGateway('Country', $adapter);
+        $tableGateway = new TableGateway('Country', $this->adapter);
 
         $code = $this->params()->fromRoute('code');
 
@@ -37,7 +50,7 @@ class IndexController extends AbstractActionController
             throw new \Exception('No Country Found for code ' . $code);
         }
 
-        $cityTableGateway = new TableGateway('City', $adapter);
+        $cityTableGateway = new TableGateway('City', $this->adapter);
         $cities = $cityTableGateway->select(['CountryCode' => $code])->toArray();
 
         return new ViewModel(
@@ -51,14 +64,13 @@ class IndexController extends AbstractActionController
 
     public function cityAction()
     {
-        $adapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
 
         $id = $this->params()->fromRoute('id');
 
-        $cityTableGateway = new TableGateway('City', $adapter);
+        $cityTableGateway = new TableGateway('City', $this->adapter);
         $city = $cityTableGateway->select(['ID' => $id])->toArray();
 
-        $tableGateway = new TableGateway('Country', $adapter);
+        $tableGateway = new TableGateway('Country', $this->adapter);
 
         if (count($city) < 0) {
             throw new \Exception('No City found with ID ' . $id);

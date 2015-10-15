@@ -9,6 +9,9 @@
 
 namespace Application;
 
+use Application\Controller\IndexController;
+use Zend\Db\Adapter\Adapter;
+use Zend\Mvc\Controller\ControllerManager;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
@@ -24,6 +27,18 @@ class Module
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
+    }
+
+    public function getControllerConfig()
+    {
+        return [
+            'factories' => [
+                '\Application\Controller\Index' => function(ControllerManager $controllerManager) {
+                    $adapter = $controllerManager->getServiceLocator()->get(Adapter::class);
+                    return new IndexController($adapter);
+                }
+            ],
+        ];
     }
 
     public function getAutoloaderConfig()

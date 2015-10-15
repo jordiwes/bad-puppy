@@ -98,8 +98,6 @@ return array(
     ),
     'controllers' => array(
         'invokables' => array(
-            'Application\Controller\Index' => Controller\IndexController::class,
-
         ),
     ),
     'view_manager' => array(
