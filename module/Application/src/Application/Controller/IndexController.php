@@ -9,6 +9,7 @@
 
 namespace Application\Controller;
 
+use Application\Service\WorldService;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -19,40 +20,35 @@ class IndexController extends AbstractActionController
 {
 
     /**
-     * @var Adapter
+     * @var WorldService
      */
-    private $adapter;
+    private $worldService;
 
     /**
      * IndexController constructor.
-     * @param Adapter $adapter
+     * @param Adapter $worldService
      */
-    public function __construct(Adapter $adapter)
+    public function __construct(WorldService $worldService)
     {
-        $this->adapter = $adapter;
+        $this->worldService = $worldService;
     }
 
     public function indexAction()
     {
-        $tableGateway = new TableGateway('Country', $this->adapter);
-        $countries = $tableGateway->select()->toArray();
+        $countries = $this->worldService->getAllCountries();
         return new ViewModel(['countries' => $countries]);
     }
 
     public function countryAction()
     {
-        $tableGateway = new TableGateway('Country', $this->adapter);
 
         $code = $this->params()->fromRoute('code');
-
-        $country = $tableGateway->select(['Code' => $code])->toArray();
+        $country = $this->worldService->getCountryByCode($code);
         if (count($country) < 1) {
             throw new \Exception('No Country Found for code ' . $code);
         }
 
-        $cityTableGateway = new TableGateway('City', $this->adapter);
-        $cities = $cityTableGateway->select(['CountryCode' => $code])->toArray();
-
+        $cities = $this->worldService->getCitiesByCountryCode($code);
         return new ViewModel(
             [
                 'country' => $country[0],
@@ -66,25 +62,18 @@ class IndexController extends AbstractActionController
     {
 
         $id = $this->params()->fromRoute('id');
-
-        $cityTableGateway = new TableGateway('City', $this->adapter);
-        $city = $cityTableGateway->select(['ID' => $id])->toArray();
-
-        $tableGateway = new TableGateway('Country', $this->adapter);
-
+        $city = $this->worldService->getCityById($id);
         if (count($city) < 0) {
             throw new \Exception('No City found with ID ' . $id);
         }
-
         $city = $city[0];
 
-        $country = $tableGateway->select(['Code' => $city['CountryCode']])->toArray();
-        $country = $country[0];
+        $country = $this->worldService->getCountryByCode($city['CountryCode']);
 
         return new ViewModel(
             [
                 'city' => $city,
-                'country' => $country,
+                'country' => $country[0],
             ]
         );
     }
