@@ -11,7 +11,9 @@ namespace Application\Controller;
 
 use Application\Service\WorldService;
 use Zend\Db\Adapter\Adapter;
-use Zend\Db\TableGateway\TableGateway;
+use Zend\Filter\StaticFilter;
+use Zend\Filter\ToInt;
+use Zend\I18n\Filter\Alpha;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -41,7 +43,7 @@ class IndexController extends AbstractActionController
 
     public function countryAction()
     {
-        $code = $this->params()->fromRoute('code');
+        $code = StaticFilter::execute($this->params()->fromRoute('code'), Alpha::class);
         $country = $this->worldService->getCountryByCode($code);
         if (count($country) < 1) {
             throw new \Exception('No Country Found for code ' . $code);
@@ -49,17 +51,17 @@ class IndexController extends AbstractActionController
 
         $cities = $this->worldService->getCitiesByCountryCode($code);
         return new ViewModel(
-            [
-                'country' => $country[0],
-                'cities' => $cities,
-            ]
+          [
+            'country' => $country[0],
+            'cities' => $cities,
+          ]
         );
 
     }
 
     public function cityAction()
     {
-        $id = $this->params()->fromRoute('id');
+        $id = StaticFilter::execute($this->params()->fromRoute('id'), ToInt::class);
         $city = $this->worldService->getCityById($id);
         if (count($city) < 0) {
             throw new \Exception('No City found with ID ' . $id);
@@ -69,10 +71,10 @@ class IndexController extends AbstractActionController
         $country = $this->worldService->getCountryByCode($city['CountryCode']);
 
         return new ViewModel(
-            [
-                'city' => $city,
-                'country' => $country[0],
-            ]
+          [
+            'city' => $city,
+            'country' => $country[0],
+          ]
         );
     }
 }
