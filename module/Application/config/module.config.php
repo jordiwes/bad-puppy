@@ -10,90 +10,96 @@
 namespace Application;
 
 use Application\Controller\IndexController;
+use Application\View\Helper\CountryAnchor;
 use Zend\Mvc\Router\Http\Literal;
 use Zend\Mvc\Router\Http\Segment;
 
-return array(
-    'router' => array(
-        'routes' => array(
-            'home' => array(
-                'type' => Literal::class,
-                'options' => array(
-                    'route'    => '/',
-                    'defaults' => array(
-                        'controller' => IndexController::class,
-                        'action'     => 'index',
-                    ),
-                ),
-            ),
+return [
+  'router' => [
+    'routes' => [
+      'home' => [
+        'type' => Literal::class,
+        'options' => [
+          'route' => '/',
+          'defaults' => [
+            'controller' => IndexController::class,
+            'action' => 'index',
+          ],
+        ],
+      ],
 
-            'country' => array(
-                'type' => Segment::class,
-                'options' => array(
-                    'route'    => '/country/:code',
-                    'defaults' => array(
-                        'controller' => IndexController::class,
-                        'action'     => 'country',
-                    ),
-                ),
-            ),
+      'country' => [
+        'type' => Segment::class,
+        'options' => [
+          'route' => '/country/:code',
+          'defaults' => [
+            'controller' => IndexController::class,
+            'action' => 'country',
+          ],
+        ],
+      ],
 
-            'city' => array(
-                'type' => Segment::class,
-                'options' => array(
-                    'route'    => '/city/:id',
-                    'defaults' => array(
-                        'controller' => IndexController::class,
-                        'action'     => 'city',
-                    ),
-                ),
-            ),
-        ),
-    ),
-    'service_manager' => array(
-        'abstract_factories' => array(
-            \Zend\Cache\Service\StorageCacheAbstractServiceFactory::class,
-            \Zend\Log\LoggerAbstractServiceFactory::class,
-        ),
-        'factories' => array(
-            'translator' => \Zend\Mvc\Service\TranslatorServiceFactory::class,
-        ),
-    ),
-    'translator' => array(
-        'locale' => 'en_US',
-        'translation_file_patterns' => array(
-            array(
-                'type'     => 'gettext',
-                'base_dir' => __DIR__ . '/../language',
-                'pattern'  => '%s.mo',
-            ),
-        ),
-    ),
-    'controllers' => array(
-        'invokables' => array(
-        ),
-    ),
-    'view_manager' => array(
-        'display_not_found_reason' => true,
-        'display_exceptions'       => true,
-        'doctype'                  => 'HTML5',
-        'not_found_template'       => 'error/404',
-        'exception_template'       => 'error/index',
-        'template_map' => array(
-            'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
-            'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
-            'error/404'               => __DIR__ . '/../view/error/404.phtml',
-            'error/index'             => __DIR__ . '/../view/error/index.phtml',
-        ),
-        'template_path_stack' => array(
-            __DIR__ . '/../view',
-        ),
-    ),
+      'city' => [
+        'type' => Segment::class,
+        'options' => [
+          'route' => '/city/:id',
+          'defaults' => [
+            'controller' => IndexController::class,
+            'action' => 'city',
+          ],
+        ],
+      ],
+    ],
+  ],
+  'service_manager' => [
+    'abstract_factories' => [
+      \Zend\Cache\Service\StorageCacheAbstractServiceFactory::class,
+      \Zend\Log\LoggerAbstractServiceFactory::class,
+    ],
+    'factories' => [
+      'translator' => \Zend\Mvc\Service\TranslatorServiceFactory::class,
+    ],
+  ],
+  'translator' => [
+    'locale' => 'en_US',
+    'translation_file_patterns' => [
+      [
+        'type' => 'gettext',
+        'base_dir' => __DIR__ . '/../language',
+        'pattern' => '%s.mo',
+      ],
+    ],
+  ],
+  'controllers' => [
+    'invokables' => [
+    ],
+  ],
+  'view_helpers' => [
+    'invokables' => [
+      'CountryAnchor' => CountryAnchor::class,
+    ],
+  ],
+  'view_manager' => [
+    'display_not_found_reason' => true,
+    'display_exceptions' => true,
+    'doctype' => 'HTML5',
+    'not_found_template' => 'error/404',
+    'exception_template' => 'error/index',
+    'template_map' => [
+      'layout/layout' => __DIR__ . '/../view/layout/layout.phtml',
+      'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+      'error/404' => __DIR__ . '/../view/error/404.phtml',
+      'error/index' => __DIR__ . '/../view/error/index.phtml',
+    ],
+    'template_path_stack' => [
+      __DIR__ . '/../view',
+    ],
+  ],
     // Placeholder for console routes
-    'console' => array(
-        'router' => array(
-            'routes' => array(
-            ),
-        ),
-    ),
-);
+  'console' => [
+    'router' => [
+      'routes' => [
+      ],
+    ],
+  ],
+];

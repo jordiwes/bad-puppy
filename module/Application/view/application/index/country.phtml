@@ -1,31 +1,37 @@
-<p><a href="/"><< Countries</a></p>
+<p><a href="<?= $this->url('home'); ?>"><< Countries</a></p>
 
 
-<h1><?php echo $country['Name']; ?></h1>
-<h3><?php echo $country['Continent']; ?></h3>
+<h1><?= $country['Name']; ?></h1>
+<h3><?= $country['Continent']; ?></h3>
 
 <div class="row">
     <div class="col-lg-4">
         <h5>Population:</h5>
-        <p><?php echo $country['Population']; ?></p>
+
+        <p><?= $country['Population']; ?></p>
     </div>
 
     <div class="col-lg-4">
         <h5>Surface Area</h5>
-        <p><?php echo $country['SurfaceArea']; ?></p>
+
+        <p><?= $country['SurfaceArea']; ?></p>
     </div>
 
     <div class="col-lg-4">
         <h5>Life Expectancy</h5>
-        <p><?php echo $country['LifeExpectancy']; ?></p>
+
+        <p><?= $country['LifeExpectancy']; ?></p>
     </div>
 </div>
 
 <h4>Cities</h4>
 
 <ul>
-    <?php foreach($cities as $city) {
-        echo "<li><a href='/city/{$city['ID']}'>{$city['Name']}</a></li>";
-} ?>
-
+    <?php foreach ($cities as $city): ?>
+        <li>
+            <a href="<?= $this->url('city', ['id' => $city['ID']]); ?>">
+                <?= $city['Name'] ?>
+            </a>
+        </li>
+    <?php endforeach; ?>
 </ul>
