@@ -9,7 +9,11 @@
 
 namespace Application;
 
+use Application\AbstractFactory\TableGatewayAbstractFactory;
 use Application\Controller\IndexController;
+use Application\Controller\IndexControllerFactory;
+use Application\Service\WorldService;
+use Application\Service\WorldServiceFactory;
 use Application\View\Helper\CountryAnchor;
 use Zend\Mvc\Router\Http\Literal;
 use Zend\Mvc\Router\Http\Segment;
@@ -51,15 +55,19 @@ return [
       ],
     ],
   ],
+
   'service_manager' => [
     'abstract_factories' => [
       \Zend\Cache\Service\StorageCacheAbstractServiceFactory::class,
       \Zend\Log\LoggerAbstractServiceFactory::class,
+      TableGatewayAbstractFactory::class,
     ],
     'factories' => [
       'translator' => \Zend\Mvc\Service\TranslatorServiceFactory::class,
+      WorldService::class => WorldServiceFactory::class,
     ],
   ],
+
   'translator' => [
     'locale' => 'en_US',
     'translation_file_patterns' => [
@@ -70,15 +78,19 @@ return [
       ],
     ],
   ],
+
   'controllers' => [
-    'invokables' => [
+    'factories' => [
+      IndexController::class => IndexControllerFactory::class,
     ],
   ],
+
   'view_helpers' => [
     'invokables' => [
       'CountryAnchor' => CountryAnchor::class,
     ],
   ],
+
   'view_manager' => [
     'display_not_found_reason' => true,
     'display_exceptions' => true,
