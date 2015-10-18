@@ -11,6 +11,7 @@ namespace Application\AbstractFactory;
 
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\TableGateway\TableGateway;
+use Zend\Mvc\Application;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -46,7 +47,12 @@ class TableGatewayAbstractFactory implements AbstractFactoryInterface
       $name,
       $requestedName
     ) {
-        $tableName = ucfirst(str_replace('Table', '', $requestedName));
-        return new TableGateway($tableName, $serviceLocator->get(Adapter::class));
+        $extractedName = ucfirst(str_replace('Table', '', $requestedName));
+        $objectName = '\Application\Entity\\' . $extractedName;
+        $hydrator           = new \Zend\Stdlib\Hydrator\ClassMethods();
+        $rowObjectPrototype = new $objectName;
+        $resultSet          = new \Zend\Db\ResultSet\HydratingResultSet($hydrator, $rowObjectPrototype);
+
+        return new TableGateway($extractedName, $serviceLocator->get(Adapter::class), null, $resultSet);
     }
 }

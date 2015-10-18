@@ -45,14 +45,15 @@ class IndexController extends AbstractActionController
     {
         $code = StaticFilter::execute($this->params()->fromRoute('code'), Alpha::class);
         $country = $this->worldService->getCountryByCode($code);
-        if (count($country) < 1) {
+
+        if (!$country) {
             throw new \Exception('No Country Found for code ' . $code);
         }
 
         $cities = $this->worldService->getCitiesByCountryCode($code);
         return new ViewModel(
           [
-            'country' => $country[0],
+            'country' => $country,
             'cities' => $cities,
           ]
         );
@@ -63,17 +64,17 @@ class IndexController extends AbstractActionController
     {
         $id = StaticFilter::execute($this->params()->fromRoute('id'), ToInt::class);
         $city = $this->worldService->getCityById($id);
-        if (count($city) < 0) {
+
+        if (!$city) {
             throw new \Exception('No City found with ID ' . $id);
         }
-        $city = $city[0];
 
-        $country = $this->worldService->getCountryByCode($city['CountryCode']);
+        $country = $this->worldService->getCountryByCode($city->getCountryCode());
 
         return new ViewModel(
           [
             'city' => $city,
-            'country' => $country[0],
+            'country' => $country,
           ]
         );
     }

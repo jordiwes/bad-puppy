@@ -1,12 +1,17 @@
+<?php
+/** @var \Application\Entity\Country $country */
+/** @var \Application\Entity\City $city */
+?>
+
 <p><?= $this->CountryAnchor($country); ?></p>
 
-<h1><?= $city['Name']; ?></h1>
-<h3><?= $city['District']; ?></h3>
+<h1><?= $city->getName(); ?></h1>
+<h3><?= $city->getDistrict(); ?></h3>
 
 <div class="row">
     <div class="col-lg-4">
         <h5>Population:</h5>
 
-        <p><?= $city['Population']; ?></p>
+        <p><?= $city->getPopulation(); ?></p>
     </div>
 </div>

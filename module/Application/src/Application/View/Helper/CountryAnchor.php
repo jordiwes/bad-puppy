@@ -9,6 +9,7 @@
 namespace Application\View\Helper;
 
 
+use Application\Entity\Country;
 use Zend\View\Helper\HelperInterface;
 use Zend\View\Renderer\RendererInterface as Renderer;
 
@@ -19,12 +20,12 @@ class CountryAnchor implements HelperInterface
      */
     private $view;
 
-    public function __invoke(array $country)
+    public function __invoke(Country $country)
     {
         return '<a href="'
-        . $this->getView()->url('country', ['code' => $country['Code']])
+        . $this->getView()->url('country', ['code' => $country->getCode()])
         . '">'
-        . $country['Name']
+        . $country->getName()
         . '</a>';
     }
 

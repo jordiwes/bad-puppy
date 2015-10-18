@@ -9,6 +9,8 @@
 namespace Application\Service;
 
 
+use Application\Entity\City;
+use Application\Entity\Country;
 use Zend\Db\TableGateway\TableGateway;
 
 class WorldService
@@ -35,43 +37,48 @@ class WorldService
     }
 
     /**
-     * @return array
+     * @return Country[]
      */
     public function getAllCountries()
     {
-        $countries = $this->countryTable->select()->toArray();
+        $countries = $this->countryTable->select();
         return $countries;
     }
 
     /**
      * @param string $code
-     * @return array
+     * @return Country
      */
     public function getCountryByCode($code)
     {
-        $country = $this->countryTable->select(['Code' => $code])->toArray();
-        return $country;
+        $country = $this->countryTable->select(['Code' => $code]);
+        if ($country->count() < 1) {
+            return false;
+        }
+        return $country->current();
     }
 
     /**
      * @param string $countryCode
-     * @return array
+     * @return City[]
      */
     public function getCitiesByCountryCode($countryCode)
     {
-        $cities = $this->cityTable->select(['CountryCode' => $countryCode])
-          ->toArray();
+        $cities = $this->cityTable->select(['CountryCode' => $countryCode]);
         return $cities;
     }
 
     /**
      * @param $id
-     * @return array
+     * @return City
      */
     public function getCityById($id)
     {
-        $city = $this->cityTable->select(['ID' => $id])->toArray();
-        return $city;
+        $city = $this->cityTable->select(['ID' => $id]);
+        if ($city->count() < 1) {
+            return false;
+        }
+        return $city->current();
     }
 
 }
